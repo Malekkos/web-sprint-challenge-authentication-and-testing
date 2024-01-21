@@ -81,7 +81,6 @@ describe("[GET] endpoint", () => {
     const returningUser = {"username": "Brady", "password": "Minnesoooodddda"}
     await request(server).post("/api/auth/register").send(newUser)
     const loginResponse = await request(server).post("/api/auth/login").send(returningUser)
-    // expect(loginResponse.body.token).toEqual("asdgareg")
     const response = await request(server).get("/api/jokes").set("Authorization", loginResponse.body.token)
     expect(response.body).toHaveLength(3)
   })
