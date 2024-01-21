@@ -50,11 +50,27 @@ describe("[POST] login endpoint", () => {
   test("Logging in with valid credentials responds with welcome message and token", async () => {
     let newUser = {"username": "bobRULES", "password": "life0nPlan3tEarth"}
     let returningUser = {"username": "bobRULES", "password": "life0nPlan3tEarth"}
-    let expectedResponse = "welcome, bobRULES"
+    const expectedResponse = "welcome, bobRULES"
     await request(server).post("/api/auth/register").send(newUser)
     let response = await request(server).post("/api/auth/login").send(returningUser)
     expect(response.body.message).toEqual(expectedResponse)
     expect(response.body.token).toBeTruthy()
   })
-  // test("Loggin in with invalid credentials responds with message")
+  test("Logging in with invalid password or incorrect username responds with a sad message", async () => {
+    let newUser = {"username": "KardashianKing", "password": "Plas1cL0v3r"}
+    let returningUser = {"username": "KardashianKing", "password": "p1asTicLover"}
+    const expectedResponse = "invalid credentials"
+    await request(server).post("/api/auth/register").send(newUser)
+    let response = await request(server).post("/api/auth/login").send(returningUser)
+    expect(response.body).toEqual(expectedResponse)
+  })
+  test("Attempting to login with a field missing responds with a sad message", async () => {
+    let returningUser = {"username": "forgetfulSometimes"}
+    let response = await request(server).post("/api/auth/login").send(returningUser)
+    const expectedResponse = "username and password required"
+    expect(response.body).toEqual(expectedResponse)
+    returningUser = {"password": "whatsMyName?"}
+    response = await request(server).post("/api/auth/login").send(returningUser)
+    expect(response.body).toEqual(expectedResponse)
+  })
 })
