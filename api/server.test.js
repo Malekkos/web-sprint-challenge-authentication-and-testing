@@ -45,3 +45,14 @@ describe("[POST] register endpoint", () => {
     expect(response.body).toEqual(errorMessage)
   })
 })
+
+describe("[POST] login endpoint", () => {
+  test("Logging in with valid credentials responds with welcome message and token", async () => {
+    let newUser = {"username": "bobRULES", "password": "life0nPlan3tEarth"}
+    let returningUser = {"username": "bobRULES", "password": "life0nPlan3tEarth"}
+    let expectedResponse = "welcome, bobRULES"
+    await request(server).post("/api/auth/register").send(newUser)
+    let response = await request(server).post("/api/auth/login").send(returningUser)
+    expect(response.body.message).toEqual(expectedResponse)
+  })
+})
