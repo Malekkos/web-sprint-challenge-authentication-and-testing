@@ -1,10 +1,18 @@
-module.exports = (req, res, next) => {
-  
-    
-  
-  
+const jwt = require("jsonwebtoken")
 
-  next();
+module.exports = (req, res, next) => {
+  const token = req.headers.authorization
+  if(token) {
+    jwt.verify(token, process.env.SECRET || "shh", (error, decoded) => {
+      if(error) {
+        res.json("token invalid")
+      } else {
+        next()
+      }
+    })
+  } else {
+    res.json("token required")
+  } 
   /*
     IMPLEMENT
 
