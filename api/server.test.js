@@ -54,5 +54,7 @@ describe("[POST] login endpoint", () => {
     await request(server).post("/api/auth/register").send(newUser)
     let response = await request(server).post("/api/auth/login").send(returningUser)
     expect(response.body.message).toEqual(expectedResponse)
+    expect(response.body.token).toBeTruthy()
   })
+  // test("Loggin in with invalid credentials responds with message")
 })
