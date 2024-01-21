@@ -5,13 +5,13 @@ module.exports = (req, res, next) => {
   if(token) {
     jwt.verify(token, process.env.SECRET || "shh", (error, decoded) => {
       if(error) {
-        res.json("token invalid")
+        res.status(405).json("token invalid")
       } else {
         next()
       }
     })
   } else {
-    res.json("token required")
+    res.status(405).json("token required")
   } 
   /*
     IMPLEMENT

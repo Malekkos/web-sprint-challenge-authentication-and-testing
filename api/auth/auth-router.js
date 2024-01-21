@@ -4,14 +4,12 @@ const db = require("../../data/dbConfig")
 const jwt = require("jsonwebtoken")
 
 router.post('/register', async (req, res) => {
-  console.log("reached")
   const { username, password } = req.body
-  console.log("username:", username, "password:", password)
   const hash = bcrypt.hashSync(String(password), 8)
   if(!username || !password) {
-    res.json("username and password required")
+    res.status(405).json("username and password required")
   } else if(await db("users").where("username", username).first() !== undefined) {
-    res.json("username taken")
+    res.status(405).json("username taken")
   } else {
     await db("users")
     .insert({"username": username, "password": hash})
@@ -51,7 +49,7 @@ router.post('/login', async (req, res) => {
   // res.end('implement login, please!');
   const { username, password } = req.body
   if(!username || !password) {
-    res.json("username and password required")
+    res.status(405).json("username and password required")
   } else {
   await db("users")
     .where("username", username)
@@ -59,9 +57,9 @@ router.post('/login', async (req, res) => {
       console.log(user)
       if(user && bcrypt.compareSync(password, user.password)) {
         const token = buildToken(user)
-        res.status(201).json({ message: `welcome, ${username}`, token})
+        res.status(200).json({ message: `welcome, ${username}`, token})
       } else {
-        res.json("invalid credentials")
+        res.status(405).json("invalid credentials")
       }
     })
   } 
