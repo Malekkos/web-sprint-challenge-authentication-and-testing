@@ -4,7 +4,9 @@ const db = require("../../data/dbConfig")
 const jwt = require("jsonwebtoken")
 
 router.post('/register', async (req, res) => {
+  console.log("reached")
   const { username, password } = req.body
+  console.log("username:", username, "password:", password)
   const hash = bcrypt.hashSync(String(password), 8)
   if(!username || !password) {
     res.json("username and password required")
