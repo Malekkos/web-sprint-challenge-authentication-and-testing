@@ -84,4 +84,18 @@ describe("[GET] endpoint", () => {
     const response = await request(server).get("/api/jokes").set("Authorization", loginResponse.body.token)
     expect(response.body).toHaveLength(3)
   })
+  test("Making a call to the get endpoint with an invalid token returns a sad message", async () => {
+    const newUser = {"username": "supremeHAXXOR", "password": "yourPasswordHere"}
+    const returningUser = {"username": "supremeHAXXOR", "password": "yourPasswordHere"}
+    const expectedResponse = "token invalid"
+    await request(server).post("/api/auth/register").send(newUser)
+    await request(server).post("/api/auth/login").send(returningUser)
+    const response = await request(server).get("/api/jokes").set("Authorization", "ultraFake125Token")
+    expect(response.body).toEqual(expectedResponse)
+  })
+  test("Making a call to the get endpoint with no token returns a sad message", async () => {
+    const expectedReponse = "token required"
+    const response = await request(server).get("/api/jokes")
+    expect(response.body).toEqual(expectedReponse)
+  })
 })
