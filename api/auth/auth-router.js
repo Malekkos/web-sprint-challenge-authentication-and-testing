@@ -48,7 +48,9 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   // res.end('implement login, please!');
   const { username, password } = req.body
-
+  if(!username || !password) {
+    res.json("username and password required")
+  } else {
   await db("users")
     .where("username", username)
     .then(([user]) => {
@@ -56,8 +58,11 @@ router.post('/login', async (req, res) => {
       if(user && bcrypt.compareSync(password, user.password)) {
         const token = buildToken(user)
         res.status(201).json({ message: `welcome, ${username}`, token})
+      } else {
+        res.json("invalid credentials")
       }
     })
+  } 
 
   /*
     IMPLEMENT
